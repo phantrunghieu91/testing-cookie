@@ -4,7 +4,20 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Testing Cookie</title>
+    <script src="https://code.jquery.com/jquery-3.7.1.slim.min.js" integrity="sha256-kmHvs0B+OpCW5GVHUNjv9rOmY0IvSIRcf7zGUDTDQM8=" crossorigin="anonymous"></script>
     <script src="demo.js" defer></script>
   </head>
-  <body></body>
+  <body>
+    <h1 class="app-title">todo management</h1>
+    <form action="#" id="todo-form">
+      <h2>Add new todo</h2>
+      <input type="text" placeholder="enter what you want to do" />
+      <button type="submit" class="submit-btn">add</button>
+      <button type="reset" class="reset-btn">reset</button>
+    </form>
+    <div id="todo-list">
+      <h2></h2>
+      <ol class="list"></ol>
+    </div>
+  </body>
 </html>
