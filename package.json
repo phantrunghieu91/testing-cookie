@@ -3,7 +3,11 @@
   "version": "1.0.0",
   "main": "./public",
   "license": "MIT",
+  "scripts": {
+    "css-compile": "sass --watch ./src/input.scss ./public/output.css"
+  },
   "dependencies": {
-    "global": "^4.4.0"
+    "global": "^4.4.0",
+    "sass": "^1.69.5"
   }
 }

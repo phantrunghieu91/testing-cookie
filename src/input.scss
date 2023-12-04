@@ -1,0 +1,135 @@
+*,
+:before,
+:after {
+  box-sizing: border-box;
+  padding: 0;
+  margin: 0;
+}
+$transition-time: 700ms;
+
+body {
+  font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
+  background-color: black;
+  color: white;
+  padding: 2rem;
+  display: flex;
+  flex-flow: column nowrap;
+  align-items: center;
+  min-height: 100dvh;
+  max-width: 768px;
+
+  > h1 {
+    text-transform: uppercase;
+  }
+
+  h2 {
+    text-transform: capitalize;
+  }
+
+  button,
+  input {
+    padding: 0.5rem 1rem;
+    border-radius: 0;
+    border: 0;
+  }
+
+  button {
+    text-transform: uppercase;
+    font-size: 0.85rem;
+    font-weight: 700;
+    background-color: var(--btn-bg, red);
+    color: var(--btn-clr, white);
+    transition: background $transition-time;
+    cursor: pointer;
+    &[type='submit'] {
+      --btn-bg: DarkGreen;
+    }
+    &[type='reset'] {
+      --btn-bg: FireBrick;
+    }
+    &:hover {
+      background-color: color-mix(in srgb, var(--btn-bg), White 20%);
+    }
+  }
+
+  #todo-form,
+  #todo-list {
+    margin-top: 2rem;
+    width: 100%;
+  }
+
+  #todo-list {
+    display: grid;
+    > .list {
+      margin-top: 1rem;
+      > .todo-item {
+        margin-top: 0.5rem;
+        display: flex;
+        align-items: center;
+        column-gap: 0.5rem;
+        > p {
+          margin-right: auto;
+          padding-right: 1rem;
+          margin-left: 1rem;
+          font-size: 1.2rem;
+          font-style: italic;
+          cursor: pointer;
+          &.completed {
+            text-decoration: line-through;
+          }
+        }
+        > button:first-of-type {
+          --btn-bg: DodgerBlue;
+        }
+        > button:last-of-type {
+          --btn-bg: FireBrick;
+        }
+      }
+    }
+  }
+
+  ::backdrop {
+    background-image: linear-gradient(45deg, magenta, rebeccapurple, dodgerblue, green);
+    opacity: 0.75;
+  }
+
+  #modal {
+    margin: auto;
+    width: 480px;
+    background-color: black;
+    border: 0;
+    padding: 1rem;
+
+    .close-btn {
+      --btn-bg: Maroon;
+    }
+
+    header {
+      display: flex;
+      align-items: center;
+      padding-bottom: 0.5rem;
+      border-bottom: 1px solid LightSteelBlue;
+      .title {
+        color: white;
+        margin-right: auto;
+      }
+    }
+
+    main {
+      padding: 2rem 0;
+      color: white;
+    }
+
+    footer {
+      display: flex;
+      justify-content: flex-end;
+      column-gap: 0.5rem;
+      > button:nth-child(1) {
+        --btn-bg: FireBrick;
+      }
+      > button:nth-child(2) {
+        --btn-bg: DarkGreen;
+      }
+    }
+  }
+}
