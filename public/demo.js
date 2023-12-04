@@ -3,10 +3,11 @@ class TodoApp {
     constructor() {
         var _a, _b, _c, _d;
         this.count = 1;
-        this.todoList = [{ id: 1, text: 'test' }];
+        this.todoList = [];
         this.form = document.querySelector('#todo-form');
         this.modal = document.querySelector('#modal');
         this.listDiv = document.querySelector('#todo-list');
+        this.loadTodoListFromCookie();
         this.renderList();
         (_a = this.form) === null || _a === void 0 ? void 0 : _a.addEventListener('submit', event => {
             var _a;
@@ -14,6 +15,7 @@ class TodoApp {
             const input = (_a = this.form) === null || _a === void 0 ? void 0 : _a.querySelector('input');
             if (!this.updatingTodo && input) {
                 this.todoList.push({ id: ++this.count, text: input.value });
+                this.saveTodoListIntoCookie();
                 input.value = '';
             }
             if (this.updatingTodo && input) {
@@ -24,11 +26,12 @@ class TodoApp {
                         todo = this.updatingTodo;
                     return todo;
                 });
+                this.saveTodoListIntoCookie();
                 this.setUpdatingTodo(undefined);
             }
             this.renderList();
         });
-        (_b = this.form) === null || _b === void 0 ? void 0 : _b.addEventListener('reset', event => {
+        (_b = this.form) === null || _b === void 0 ? void 0 : _b.addEventListener('reset', () => {
             var _a;
             (_a = this.form) === null || _a === void 0 ? void 0 : _a.reset();
             this.setUpdatingTodo(undefined);
@@ -37,6 +40,23 @@ class TodoApp {
             var _a;
             (_a = this.modal) === null || _a === void 0 ? void 0 : _a.close();
         });
+    }
+    saveTodoListIntoCookie() {
+        document.cookie = `todos=${JSON.stringify(this.todoList)}; expires=${this.getExpirationDate(7)}`;
+    }
+    loadTodoListFromCookie() {
+        const cookie = this.getCookie('todos');
+        this.todoList = cookie ? JSON.parse(cookie) : [];
+    }
+    getCookie(name) {
+        const cookies = document.cookie.split(';');
+        const listCookie = cookies.find(c => c.trim().startsWith(`${name}`));
+        return listCookie ? listCookie.split('=')[1] : null;
+    }
+    getExpirationDate(days) {
+        const expirationDate = new Date();
+        expirationDate.setTime(expirationDate.getTime() + days * 24 * 60 * 60 * 1000);
+        return expirationDate.toUTCString();
     }
     setUpdatingTodo(todo) {
         this.updatingTodo = todo;
@@ -141,6 +161,7 @@ class TodoApp {
             submitBtn.addEventListener('click', () => {
                 var _a;
                 this.todoList = this.todoList.filter(el => el.id !== todo.id);
+                this.saveTodoListIntoCookie();
                 this.renderList();
                 (_a = this.modal) === null || _a === void 0 ? void 0 : _a.close();
             });

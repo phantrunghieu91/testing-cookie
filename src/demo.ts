@@ -6,13 +6,14 @@ type TodoType = {
 
 class TodoApp {
   private count = 1;
-  private todoList: TodoType[] = [{ id: 1, text: 'test' }];
+  private todoList: TodoType[] = [];
   private updatingTodo: undefined | TodoType;
   private form: HTMLFormElement | null = document.querySelector('#todo-form');
   private modal: HTMLDialogElement | null = document.querySelector('#modal');
   private listDiv = document.querySelector('#todo-list');
 
   constructor() {
+    this.loadTodoListFromCookie();
     this.renderList();
     this.form?.addEventListener('submit', event => {
       event.preventDefault();
@@ -20,6 +21,7 @@ class TodoApp {
 
       if (!this.updatingTodo && input) {
         this.todoList.push({ id: ++this.count, text: input.value });
+        this.saveTodoListIntoCookie();
         input.value = '';
       }
       if (this.updatingTodo && input) {
@@ -28,11 +30,12 @@ class TodoApp {
           if (this.updatingTodo !== undefined && todo.id === this.updatingTodo?.id) todo = this.updatingTodo;
           return todo;
         });
+        this.saveTodoListIntoCookie();
         this.setUpdatingTodo(undefined);
       }
       this.renderList();
     });
-    this.form?.addEventListener('reset', event => {
+    this.form?.addEventListener('reset', () => {
       this.form?.reset();
       this.setUpdatingTodo(undefined);
     });
@@ -41,12 +44,30 @@ class TodoApp {
     });
   }
 
-  setUpdatingTodo(todo: undefined | TodoType) {
+  private saveTodoListIntoCookie() {
+    document.cookie = `todos=${JSON.stringify(this.todoList)}; expires=${this.getExpirationDate(7)}`;
+  }
+  private loadTodoListFromCookie() {
+    const cookie = this.getCookie('todos');
+    this.todoList = cookie ? JSON.parse(cookie) : [];
+  }
+  private getCookie(name: string): string | null {
+    const cookies = document.cookie.split(';');
+    const listCookie = cookies.find(c => c.trim().startsWith(`${name}`));
+    return listCookie ? listCookie.split('=')[1] : null;
+  }
+  private getExpirationDate(days: number): string {
+    const expirationDate = new Date();
+    expirationDate.setTime(expirationDate.getTime() + days * 24 * 60 * 60 * 1000);
+    return expirationDate.toUTCString();
+  }
+
+  private setUpdatingTodo(todo: undefined | TodoType) {
     this.updatingTodo = todo;
     this.changeFormForUpdate();
   }
 
-  changeFormForUpdate() {
+  private changeFormForUpdate() {
     if (this.form) {
       const title = this.form.querySelector('h2');
       const input = this.form.querySelector('input');
@@ -142,6 +163,7 @@ class TodoApp {
 
       submitBtn.addEventListener('click', () => {
         this.todoList = this.todoList.filter(el => el.id !== todo.id);
+        this.saveTodoListIntoCookie();
         this.renderList();
         this.modal?.close();
       });
